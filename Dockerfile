@@ -1,6 +1,7 @@
-FROM node:13-alpine
-RUN mkdir -p /home/app
-COPY ./* /home/app/
-WORKDIR /home/app
-RUN npm install
-CMD ["node", "server.js"]
+FROM nginx
+
+COPY wrapper.sh /
+
+COPY html /usr/share/nginx/html
+
+CMD ["./wrapper.sh"]
