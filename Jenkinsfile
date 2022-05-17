@@ -3,7 +3,7 @@ pipeline {
   agent any
   
   environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+		DOCKERHUB_CREDENTIALS=credentials('bDocker-Credentials')
 	}
 
   stages {
@@ -25,7 +25,7 @@ pipeline {
       stage("Push image") {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'Docker-Credentials') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhu') {
                             myapp.push("latest")
                             myapp.push("${env.BUILD_ID}")
                     }
