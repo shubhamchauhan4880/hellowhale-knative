@@ -10,7 +10,7 @@ pipeline {
 
     stage('Checkout Source') {
       steps {
-        git url:'https://github.com/Anmol-Seth1/hellowhale-knative.git', branch:'master'
+        git url:'https://github.com/vamsijakkula/hellowhale-knative.git', branch:'master'
       }
     }
     
