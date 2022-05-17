@@ -1,9 +1,6 @@
-FROM php:7.3-apache
-
-COPY html /usr/src/app/html
-
-WORKDIR /usr/src/app/html
-
-EXPOSE 8081
-
-CMD php -S 0.0.0.0:8081
+FROM node:13-alpine
+RUN mkdir -p /home/app
+COPY ./* /home/app/
+WORKDIR /home/app
+RUN npm install
+CMD ["node", "server.js"]
