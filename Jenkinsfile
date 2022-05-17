@@ -1,47 +1,39 @@
-pipeline {
+pipeline{
 
-  agent any
-  
-  environment {
+	agent any
+
+	environment {
 		DOCKERHUB_CREDENTIALS=credentials('Docker-Credentials')
 	}
 
-  stages {
+	stages {
 
-    stage('Checkout Source') {
-      steps {
-        git url:'https://github.com/vamsijakkula/hellowhale-knative.git', branch:'master'
-      }
-    }
-    
-      stage("Build image") {
-            steps {
-                script {
-                    myapp = docker.build("/hellowhale:${env.BUILD_ID}")
-                }
-            }
-        }
-    
-      stage("Push image") {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                            myapp.push("latest")
-                            myapp.push("${env.BUILD_ID}")
-                    }
-                }
-            }
-        }
+		stage('Build') {
 
-    
-    stage('Deploy App') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "hellowhale.yml", kubeconfigId: "mykubeconfig")
-        }
-      }
-    }
+			steps {
+				sh 'docker build -t anmolseth007/nodeapp:latest .'
+			}
+		}
 
-  }
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+
+		stage('Push') {
+
+			steps {
+				sh 'docker push anmolseth007/nodeapp:latest'
+			}
+		}
+	}
+
+	post {
+		always {
+			sh 'docker logout'
+		}
+	}
 
 }
